@@ -1,3 +1,4 @@
+import express from 'express'
 import { RouterConfigImpl } from '../common/router.config'
 import container from '../di.container'
 import { UsersControllerImpl } from './users.controller'
@@ -5,12 +6,13 @@ import { UsersControllerImpl } from './users.controller'
 const usersController = container.resolve(UsersControllerImpl)
 
 export class UsersRouter extends RouterConfigImpl {
-  constructor() {
-    super('/users')
+  constructor(app: express.Application) {
+    super('users.routes', app)
   }
 
-  configureRouter() {
-    this.router.route('/')
+  configureApp() {
+    this.app.route('/users')
       .get(usersController.getUsers)
+    return this.app
   }
 }

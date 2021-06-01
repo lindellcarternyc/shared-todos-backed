@@ -15,7 +15,7 @@ export class UsersControllerImpl implements UsersController {
   }
 
   getUsers: ExpressFunc = async (req, res) => {
-    const users = this.usersService.getUsers()
+    const users = await this.usersService.getUsers()
     return res.status(200).send({ users })
   }
 }

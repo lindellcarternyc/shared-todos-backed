@@ -1,34 +1,26 @@
 import express from  'express'
+import { AuthRoutes } from './auth/auth.routes'
 import { RouterConfig } from './common/router.config'
 import { UsersRouter } from './users/users.routes'
 
-const createDefaultRouter = (): RouterConfig => {
-  const router = express.Router()
 
-  router.get('/', (_, res) => {
-    res.send('root')
-  })
+// const DEFAULT_ROUTES: RouterConfig[] = [
+//   new AuthRoutes(),
+//   new UsersRouter(),
+//   createDefaultRouter()
+// ]
 
-  return {
-    getName() {
-      return '/'
-    },
-    getRouter() {
-      return router
-    }
-  }
-}
-
-const DEFAULT_ROUTES: RouterConfig[] = [
-  new UsersRouter(),
-  createDefaultRouter()
-]
-
-export const createApplication = (routes: RouterConfig[] = DEFAULT_ROUTES) => {
+export const createApplication = () => {
   const app = express()
+  app.use(express.json())
+
+  const routes: RouterConfig[] = [
+    new AuthRoutes(app),
+    new UsersRouter(app)
+  ]
 
   routes.forEach(route => {
-    app.use(route.getName(), route.getRouter())
+    console.log(`Routes configured for '${route.getName()}'`)
   })
 
 
