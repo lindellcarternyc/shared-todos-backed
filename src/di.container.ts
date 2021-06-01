@@ -1,4 +1,3 @@
-import { PrismaClient } from '.prisma/client'
 import { Container } from 'inversify'
 import { PrismaService, PrismaServiceImpl } from './common/services/primsa.service'
 import { UserService, UserServiceImpl } from './users/services/users.service'
