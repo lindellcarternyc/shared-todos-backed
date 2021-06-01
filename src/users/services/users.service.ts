@@ -13,14 +13,14 @@ interface WithPassword extends Record<string, any> {
   password: string
 }
 
-const removePassword = <T extends WithPassword>(obj: T): Omit<T, 'password'> => {
+const removePassword = <T extends WithPassword, U = Omit<T, 'password'>>(obj: T): U => {
   return (Object.keys(obj)).reduce((res, key) => { 
     if (key === 'password') return res
     return {
       ...res,
       [key]: obj[key]
     }
-  }, { } as Omit<T, 'password'>)
+  }, { } as U)
 }
 
 @injectable()
