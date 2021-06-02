@@ -22,6 +22,13 @@ const registerSchema = yup.object().shape({
   }).required()
 })
 
+const loginSchema = yup.object().shape({
+  body: yup.object().shape({ 
+    email: yup.string().email().required(),
+    password: yup.string().required()
+  }).required()
+})
+
 const authController = container.resolve(AuthControllerImpl)
 
 export class AuthRoutes extends RouterConfigImpl {
@@ -33,6 +40,11 @@ export class AuthRoutes extends RouterConfigImpl {
     this.app.post(`/auth/register`, [
       validate(registerSchema),
       authController.register
+    ])
+
+    this.app.post(`/auth/login`, [
+      validate(loginSchema),
+      authController.login
     ])
     return this.app
   }

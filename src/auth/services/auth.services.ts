@@ -1,6 +1,7 @@
 import { User } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { PrismaServiceImpl } from '../../common/services/primsa.service'
+import { hashPassword } from '../utils'
 
 type RegisterArgs 
   = Omit<User, 'id'>
@@ -15,7 +16,7 @@ export class AuthServiceImpl implements AuthService {
   }
 
   register = async (args: RegisterArgs) => {
-    const password = args.password
+    const password = await hashPassword(args.password)
 
     try {
       const user = await this.db.connection.user.create({
