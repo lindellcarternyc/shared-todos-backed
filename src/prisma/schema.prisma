@@ -11,8 +11,27 @@ generator client {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  username  String  @unique @db.VarChar(255)
-  email     String  @unique @db.VarChar(255)
-  password  String  @db.VarChar(255)
+  id            Int    @id @default(autoincrement())
+  username      String @unique @db.VarChar(255)
+  email         String @unique @db.VarChar(255)
+  password      String @db.VarChar(255)
+  createdLists  TodoList[]
+}
+
+model Todo {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  task      String    @db.VarChar(255)
+  list      TodoList  @relation(fields: [listId], references: [id])
+  listId    Int
+}
+
+model TodoList {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  todos         Todo[]
+  createdBy     User      @relation(fields: [createdById], references: [id])
+  createdById   Int
 }
