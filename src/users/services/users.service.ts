@@ -7,6 +7,7 @@ export interface UserService {
   getUserById(id: number): Promise<User | null>
   getUserByEmail(email: string): Promise<User | null>
   getUserByUsername(username: string): Promise<User | null>
+  deleteUsers(): Promise<void>
 }
 
 interface WithPassword extends Record<string, any> {
@@ -52,5 +53,9 @@ export class UserServiceImpl implements UserService {
     return await this.prisma.connection.user.findFirst({
       where: { username }
     })
+  }
+
+  deleteUsers = async () => {
+    await this.prisma.connection.user.deleteMany()
   }
 }

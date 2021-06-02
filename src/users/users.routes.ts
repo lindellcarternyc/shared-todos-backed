@@ -13,6 +13,7 @@ export class UsersRouter extends RouterConfigImpl {
   configureApp() {
     this.app.route('/users')
       .get(usersController.getUsers)
+      .delete(usersController.deleteUsers)
     return this.app
   }
 }
