@@ -3,13 +3,6 @@ import { AuthRoutes } from './auth/auth.routes'
 import { RouterConfig } from './common/router.config'
 import { UsersRouter } from './users/users.routes'
 
-
-// const DEFAULT_ROUTES: RouterConfig[] = [
-//   new AuthRoutes(),
-//   new UsersRouter(),
-//   createDefaultRouter()
-// ]
-
 export const createApplication = () => {
   const app = express()
   app.use(express.json())

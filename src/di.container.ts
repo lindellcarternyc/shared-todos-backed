@@ -5,6 +5,9 @@ import { PrismaService, PrismaServiceImpl } from './common/services/primsa.servi
 import { UserService, UserServiceImpl } from './users/services/users.service'
 import { UsersController, UsersControllerImpl } from './users/users.controller'
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 const container = new Container()
 
 container.bind<PrismaService>(PrismaServiceImpl).toSelf()

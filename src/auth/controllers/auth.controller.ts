@@ -1,16 +1,9 @@
 import { inject, injectable } from 'inversify'
 import { ExpressFunc } from '../../common/interfaces'
 import { UserService, UserServiceImpl } from '../../users/services/users.service'
+import { AuthResponse } from '../interfaces'
 import { AuthService, AuthServiceImpl } from '../services/auth.services'
-import { comparePassword } from '../utils'
-
-interface AuthResponse {
-  id: number
-  token: {
-    authToken: string
-    refreshToken: string
-  }
-}
+import { comparePassword, createToken } from '../utils'
 
 export interface AuthController {
   register: ExpressFunc
@@ -28,13 +21,12 @@ export class AuthControllerImpl implements AuthController {
 
   register: ExpressFunc = async (req, res) => {
     try {
-      const userId = await this.authService.register(req.body)
+      const user = await this.authService.register(req.body)
+      const token = createToken(user)
+
       const authRes: AuthResponse = {
-        id: userId,
-        token: {
-          authToken: 'AUTHTOKEN',
-          refreshToken: 'REFRESHTOKEN'
-        }
+        id: user.id,
+        token
       }
       return res.status(201).send(authRes)
     } catch(err) {
@@ -46,12 +38,15 @@ export class AuthControllerImpl implements AuthController {
     try {
       const user = await this.userService.getUserByEmail(req.body.email)
       if (user) {
+        const token = createToken({
+          username: user.username,
+          email: user.email,
+          password: user.password,
+          id: user.id
+        })
         const authRes: AuthResponse = {
           id: user.id,
-          token: {
-            authToken: 'AUTHTOKEN',
-            refreshToken: 'REFRESHTOKEN'
-          }
+          token
         }
 
         const isCorrectPassword = await comparePassword(req.body.password, user.password)
@@ -61,6 +56,7 @@ export class AuthControllerImpl implements AuthController {
       }
       return res.status(401).send('WRONG EMAIL OR PASSWORD')
     } catch (err) {
+      console.log(err)
       return res.status(500).send('INTERNAL ERROR')
     }
   }

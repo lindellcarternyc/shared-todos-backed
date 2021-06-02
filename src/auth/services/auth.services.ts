@@ -6,7 +6,7 @@ import { hashPassword } from '../utils'
 type RegisterArgs 
   = Omit<User, 'id'>
 export interface AuthService {
-  register(args: RegisterArgs): Promise<number>
+  register(args: RegisterArgs): Promise<User>
 }
 
 @injectable()
@@ -27,7 +27,7 @@ export class AuthServiceImpl implements AuthService {
         }
       })
 
-      return user.id
+      return user
     } catch (err) {
       throw err
     }
