@@ -19,12 +19,13 @@ model User {
 }
 
 model Todo {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  task      String    @db.VarChar(255)
-  list      TodoList  @relation(fields: [listId], references: [id])
-  listId    Int
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  task        String    @db.VarChar(255)
+  completed   Boolean   @default(false)
+  list        TodoList  @relation(fields: [listId], references: [id])
+  listId      Int
 }
 
 model TodoList {
