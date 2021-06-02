@@ -12,12 +12,12 @@ export const validJWTRequired: ExpressFunc = (req, res, next) => {
         res.locals.jwt = creds
         return next()
       } catch (err) {
-        return res.status(403).send()
+        return res.status(401).send('UNAUTHORIZED')
       }
     } else {
-      return res.status(401).send()
+      return res.status(401).send('UNAUTHORIZED')
     }
   } else {
-    return res.status(401).send()
+    return res.status(401).send('UNAUTHORIZED')
   }
 }

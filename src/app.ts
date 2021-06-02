@@ -1,6 +1,7 @@
 import express from  'express'
 import { AuthRoutes } from './auth/auth.routes'
 import { RouterConfig } from './common/router.config'
+import { TodosRoutes } from './todo-lists/todo-lists.routes'
 import { UsersRouter } from './users/users.routes'
 
 export const createApplication = () => {
@@ -9,7 +10,8 @@ export const createApplication = () => {
 
   const routes: RouterConfig[] = [
     new AuthRoutes(app),
-    new UsersRouter(app)
+    new UsersRouter(app),
+    new TodosRoutes(app)
   ]
 
   routes.forEach(route => {
