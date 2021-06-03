@@ -8,7 +8,7 @@ const usersController = container.resolve(UsersControllerImpl)
 
 export class UsersRouter extends RouterConfigImpl {
   constructor(app: express.Application) {
-    super('users.routes', app)
+    super('users.routes', '/users', app)
   }
 
   configureApp() {
