@@ -33,16 +33,16 @@ const authController = container.resolve(AuthControllerImpl)
 
 export class AuthRoutes extends RouterConfigImpl {
   constructor(app: express.Application) {
-    super(`auth.routes`, app)
+    super(`auth.routes`, `/auth`, app)
   }
 
   configureApp() {
-    this.app.post(`/auth/register`, [
+    this.app.post(this.route('/register'), [
       validate(registerSchema),
       authController.register
     ])
 
-    this.app.post(`/auth/login`, [
+    this.app.post(this.route(`/login`), [
       validate(loginSchema),
       authController.login
     ])
