@@ -11,6 +11,7 @@ interface CreateTodo {
   listId: number
   todo: { task: string }
 }
+
 export interface TodoListService {
   createTodoList(args: CreateTodoList): Promise<TodoList>
   createTodo(args: CreateTodo): Promise<Todo>
