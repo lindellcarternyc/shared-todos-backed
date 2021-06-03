@@ -1,24 +1,31 @@
 import express from 'express'
 
 export interface RouterConfig {
+  baseUrl: string
   getName(): string
   configureApp(): express.Application
 }
 
-export abstract class RouterConfigImpl implements RouterConfig {
-  protected readonly app: express.Application
-  private readonly name: string
 
-  constructor(name: string, app: express.Application) {
+export abstract class RouterConfigImpl implements RouterConfig {
+  protected readonly name: string
+  
+  public readonly baseUrl: string
+
+  constructor(name: string, baseUrl: string, protected readonly app: express.Application) {
     this.name = name
-    this.app = app
+    this.baseUrl = baseUrl
 
     this.configureApp()
   }
+
+  abstract configureApp(): express.Application
 
   getName = () => {
     return this.name
   }
 
-  abstract configureApp(): express.Application
+  route = (path: string): string => {
+    return this.baseUrl + path
+  }
 }
