@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { AuthToken } from './interfaces'
+import { User } from '.prisma/client'
 
 dotenv.config()
 const JWT_SECRET = process.env.JWT_SECRET!
@@ -45,7 +46,7 @@ export const createToken = (args: CreateTokenArgs): AuthToken => {
   }
 }
 
-export interface JWTData {
+export interface JWTData extends User {
   id: number
   refreshKey: Buffer
   iat: number
