@@ -27,6 +27,8 @@ export interface TodoListService {
   getListById(id: number): Promise<TodoList | null>
   deleteAllTodoLists(): Promise<void>
   updateTodo(args: UpdateTodo): Promise<Todo>
+  deleteTodo(id: number): Promise<void>
+  getTodo(id: number): Promise<Todo | null>
 }
 
 @injectable()
@@ -125,6 +127,27 @@ export class TodoListServiceImpl implements TodoListService {
       })
 
       return updatedTodo
+    } catch (err) {
+      throw err
+    }
+  }
+
+  deleteTodo = async (id: number) => {
+    try {
+      await this.db.connection.todo.delete({
+        where: { id }
+      })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  getTodo = async (id: number) => {
+    try {
+      const todo = await this.db.connection.todo.findFirst({
+        where: { id }
+      })
+      return todo
     } catch (err) {
       throw err
     }
