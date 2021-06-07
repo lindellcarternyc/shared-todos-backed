@@ -12,12 +12,21 @@ interface CreateTodo {
   todo: { task: string }
 }
 
+interface UpdateTodo {
+  todoId: number
+  todo: Partial<{
+    task: string
+    completed: boolean
+  }>
+}
+
 export interface TodoListService {
   createTodoList(args: CreateTodoList): Promise<TodoList>
   createTodo(args: CreateTodo): Promise<Todo>
   getAllLists(): Promise<TodoList[]>
   getListById(id: number): Promise<TodoList | null>
   deleteAllTodoLists(): Promise<void>
+  updateTodo(args: UpdateTodo): Promise<Todo>
 }
 
 @injectable()
@@ -98,6 +107,24 @@ export class TodoListServiceImpl implements TodoListService {
     try {
       await this.db.connection.todo.deleteMany()
       await this.db.connection.todoList.deleteMany()
+    } catch (err) {
+      throw err
+    }
+  }
+
+  updateTodo = async (args: UpdateTodo) => {
+    try {
+      const updatedTodo = await this.db.connection.todo.update({
+        where: {
+          id: args.todoId
+        },
+        data: {
+          task: args.todo.task,
+          completed: args.todo.completed
+        }
+      })
+
+      return updatedTodo
     } catch (err) {
       throw err
     }
