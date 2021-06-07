@@ -7,6 +7,7 @@ export interface TodoListController {
   getAllLists: ExpressFunc
   deleteAllLists: ExpressFunc
   createTodo: ExpressFunc
+  updateTodo: ExpressFunc
 }
 
 @injectable()
@@ -60,6 +61,22 @@ export class TodoListControllerImpl implements TodoListController {
         message: 'INTERNAL SERVER ERROR',
         err
       })
+    }
+  }
+
+  updateTodo: ExpressFunc = async (req, res) => {
+    const { todoId } = req.params
+
+    try {
+      const updatedTodo = await this.todoListService.updateTodo({
+        todoId: parseInt(todoId),
+        todo: req.body.todo
+      })
+      return res.status(200).send({
+        todo: updatedTodo
+      })
+    } catch (err) {
+      return res.status(500).send('Error updating todo')
     }
   }
 }
