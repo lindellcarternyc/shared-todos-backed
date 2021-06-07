@@ -1,8 +1,11 @@
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, TodoList, User } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { PrismaService, PrismaServiceImpl } from '../../common/services/primsa.service'
 
-type APIUser = Omit<User, 'password'>
+type APIUser = Omit<User, 'password'> & {
+  createdLists: TodoList[]
+}
+
 export interface UserService {
   getUsers(): Promise<Omit<User, 'password'>[]>
   getUserById(id: number): Promise<APIUser | null>
