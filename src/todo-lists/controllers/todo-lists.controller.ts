@@ -8,6 +8,8 @@ export interface TodoListController {
   deleteAllLists: ExpressFunc
   createTodo: ExpressFunc
   updateTodo: ExpressFunc
+  deleteTodo: ExpressFunc
+  getTodo: ExpressFunc
 }
 
 @injectable()
@@ -78,5 +80,25 @@ export class TodoListControllerImpl implements TodoListController {
     } catch (err) {
       return res.status(500).send('Error updating todo')
     }
+  }
+
+  deleteTodo: ExpressFunc = async (req, res) => {
+    const { todoId } = req.params
+
+    try {
+      await this.todoListService.deleteTodo(parseInt(todoId))
+      return res.status(203).send(`Delete todo ${todoId}`)
+    } catch (err) {
+      return res.status(500).send('Error deleting todo')
+    }
+  }
+
+  getTodo: ExpressFunc = async (req, res) => {
+    const { todoId } = req.params
+    const todo = await this.todoListService.getTodo(parseInt(todoId))
+    if (todo) {
+      return res.status(200).send({ todo })
+    }
+    return res.status(404).send(`Could not find todo with id: ${todoId}`)
   }
 }
