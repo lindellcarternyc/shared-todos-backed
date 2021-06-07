@@ -24,6 +24,15 @@ const createListSchema = yup.object().shape({
   }).required()
 })
 
+const updateTodoSchema = yup.object().shape({
+  body: yup.object().shape({
+    todo: yup.object().shape({
+      task: yup.string().min(5).max(25),
+      completed: yup.boolean()
+    }).required()
+  }).required()
+})
+
 const todoListController = container.resolve(TodoListControllerImpl)
 
 const usersMiddleware = container.resolve<UsersMiddleware>(UsersMiddlewareImpl)
@@ -61,6 +70,17 @@ export class TodosRoutes extends RouterConfigImpl {
           validate(createTodoSchema),
           todoListController.createTodo
         )
+
+    this.app.route(this.route(`/:listId/update-todo/:todoId`))
+          .all(
+            validJWTRequired,
+            usersMiddleware.userExists
+          )
+          .patch(
+            usersMiddleware.userOwnsList,
+            validate(updateTodoSchema),
+            todoListController.updateTodo
+          )
 
     return this.app
   }
