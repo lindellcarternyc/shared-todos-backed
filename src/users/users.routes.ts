@@ -28,9 +28,7 @@ export class UsersRouter extends RouterConfigImpl {
         .get(
           validJWTRequired,
           isSameUser,
-          (req, res, next) => {
-            console.log(res.locals)
-          }
+          usersController.getUserById
         )
     return this.app
   }
