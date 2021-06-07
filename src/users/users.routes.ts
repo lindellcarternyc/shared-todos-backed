@@ -1,5 +1,5 @@
 import express from 'express'
-import { validJWTRequired } from '../auth/middeware/auth.middleware'
+import { isSameUser, requiresRoles, validJWTRequired } from '../auth/middleware/auth.middleware'
 import { RouterConfigImpl } from '../common/router.config'
 import container from '../di.container'
 import { UsersControllerImpl } from './users.controller'
@@ -13,11 +13,25 @@ export class UsersRouter extends RouterConfigImpl {
 
   configureApp() {
     this.app.route('/users')
-      .get(usersController.getUsers)
-      .delete([
+      .all(
         validJWTRequired,
+        requiresRoles(['ADMIN'])
+      )
+      .get(
+        usersController.getUsers
+      )
+      .delete(
         usersController.deleteUsers
-      ])
+      )
+
+    this.app.route(`/users/:userId`)
+        .get(
+          validJWTRequired,
+          isSameUser,
+          (req, res, next) => {
+            console.log(res.locals)
+          }
+        )
     return this.app
   }
 }
