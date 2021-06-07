@@ -71,16 +71,18 @@ export class TodosRoutes extends RouterConfigImpl {
           todoListController.createTodo
         )
 
-    this.app.route(this.route(`/:listId/update-todo/:todoId`))
-          .all(
-            validJWTRequired,
-            usersMiddleware.userExists
-          )
-          .patch(
-            usersMiddleware.userOwnsList,
-            validate(updateTodoSchema),
-            todoListController.updateTodo
-          )
+    this.app.route(this.route(`/:listId/todos/:todoId`))
+      .all(
+        validJWTRequired, 
+        usersMiddleware.userExists, 
+        usersMiddleware.userOwnsList
+      )
+      .get(todoListController.getTodo)
+      .patch(
+        validate(updateTodoSchema),
+        todoListController.updateTodo
+      )
+      .delete(todoListController.deleteTodo)
 
     return this.app
   }
