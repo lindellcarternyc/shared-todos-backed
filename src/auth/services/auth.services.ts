@@ -23,7 +23,8 @@ export class AuthServiceImpl implements AuthService {
         data: {
           username: args.username,
           email: args.email,
-          password
+          password,
+          roles: ['USER']
         }
       })
 
