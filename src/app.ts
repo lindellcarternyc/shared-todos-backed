@@ -1,4 +1,6 @@
 import express from  'express'
+import morgan from 'morgan'
+
 import { AuthRoutes } from './auth/auth.routes'
 import { RouterConfig } from './common/router.config'
 import { TodosRoutes } from './todo-lists/todo-lists.routes'
@@ -7,6 +9,7 @@ import { UsersRouter } from './users/users.routes'
 export const createApplication = () => {
   const app = express()
   app.use(express.json())
+  app.use(morgan('dev'))
 
   const routes: RouterConfig[] = [
     new AuthRoutes(app),
