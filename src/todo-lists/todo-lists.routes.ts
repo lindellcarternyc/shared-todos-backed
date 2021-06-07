@@ -3,7 +3,7 @@ import * as yup from 'yup'
 import { validate } from 'express-yup'
 
 import { RouterConfigImpl } from '../common/router.config'
-import { validJWTRequired } from '../auth/middeware/auth.middleware'
+import { validJWTRequired } from '../auth/middleware/auth.middleware'
 import container from '../di.container'
 import { TodoListControllerImpl } from './controllers/todo-lists.controller'
 import { UsersMiddleware, UsersMiddlewareImpl } from '../users/middleware/users.middleware'
