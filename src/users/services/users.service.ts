@@ -1,15 +1,29 @@
-import { PrismaClient, TodoList, User } from '@prisma/client'
+import { PrismaClient, Role, TodoList, User } from '@prisma/client'
 import { inject, injectable } from 'inversify'
 import { PrismaService, PrismaServiceImpl } from '../../common/services/primsa.service'
 
-type APIUser = Omit<User, 'password'> & {
+type APIUser = User & {
   createdLists: TodoList[]
+  roles: Role[]
 }
 
+interface EmailGetUser {
+  email: string
+}
+
+interface IdGetUser {
+  id: User['id']
+}
+
+type GetUser 
+  = EmailGetUser
+  | IdGetUser
+
 export interface UserService {
+  // getUser(where: GetUser): Promise<APIUser | null>
   getUsers(): Promise<Omit<User, 'password'>[]>
-  getUserById(id: number): Promise<APIUser | null>
-  getUserByEmail(email: string): Promise<User | null>
+  getUserById(id: IdGetUser['id']): Promise<APIUser | null>
+  getUserByEmail(email: EmailGetUser['email']): Promise<APIUser | null>
   getUserByUsername(username: string): Promise<User | null>
   deleteUsers(): Promise<void>
 }
@@ -32,6 +46,24 @@ const removePassword = <T extends WithPassword, U = Omit<T, 'password'>>(obj: T)
 export class UserServiceImpl implements UserService {
   private readonly prisma: PrismaService
 
+  private getUser = async (where: GetUser) => {
+    try {
+      const user = await this.prisma.connection.user.findFirst({
+        where,
+        include: {
+          createdLists: {
+            include: {
+              todos: true
+            }
+          }
+        }
+      })
+      return user
+    } catch (err) {
+      throw err
+    }
+  }
+
   constructor(@inject(PrismaServiceImpl) prisma: PrismaService) {
     this.prisma = prisma
   }
@@ -42,27 +74,13 @@ export class UserServiceImpl implements UserService {
   }
 
   getUserById = async (id: number) => {
-    const user = await this.prisma.connection.user.findFirst({
-      where: { id },
-      include: {
-        createdLists: {
-          include: {
-            todos: true
-          }
-        }
-      }
-    })
-
-    if (user) {
-      return removePassword(user)
-    }
-    return null
+    const user = await this.getUser({ id })
+    return user
   }
 
   getUserByEmail = async (email: string) => {
-    return await this.prisma.connection.user.findFirst({
-      where: { email }
-    })
+    const user = await this.getUser({ email })
+    return user
   }
 
   getUserByUsername = async (username: string) => {
