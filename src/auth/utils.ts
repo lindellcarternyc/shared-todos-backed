@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { AuthToken } from './interfaces'
-import { User } from '.prisma/client'
+import { Role, User } from '.prisma/client'
 
 dotenv.config()
 const JWT_SECRET = process.env.JWT_SECRET!
@@ -21,6 +21,7 @@ interface CreateTokenArgs {
   email: string
   password: string
   username: string
+  roles: Role[]
 }
 
 export const createToken = (args: CreateTokenArgs): AuthToken => {
