@@ -18,7 +18,8 @@ const registerSchema = yup.object().shape({
     password: yup.string()
       .required()
       .min(5)
-      .max(25)
+      .max(25),
+    adminCode: yup.string()
   }).required()
 })
 
