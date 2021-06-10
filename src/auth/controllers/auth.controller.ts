@@ -42,7 +42,8 @@ export class AuthControllerImpl implements AuthController {
           username: user.username,
           email: user.email,
           password: user.password,
-          id: user.id
+          id: user.id,
+          roles: user.roles
         })
         const authRes: AuthResponse = {
           id: user.id,
