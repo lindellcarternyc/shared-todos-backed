@@ -26,8 +26,7 @@ export const validJWTRequired: ExpressFunc = (req, res, next) => {
 export const requiresRoles = (requiredRoles: Role[]): ExpressFunc => {
   return (req, res, next) => {
     const { roles }= res.locals.jwt as JWTData
-    console.log({ roles })
-
+    
     for (const role of requiredRoles) {
       if (!roles.includes(role)) {
         return res.status(401).send('UNATHORIZED')
