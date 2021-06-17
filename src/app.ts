@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import express from  'express'
 import morgan from 'morgan'
 
@@ -22,6 +23,9 @@ export const createApplication = () => {
   })
 
 
+  app.get('/', (req, res) => {
+    res.status(200).send('HEY!!!')
+  })
   return app
 }
 
